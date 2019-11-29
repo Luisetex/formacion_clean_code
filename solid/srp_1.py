@@ -6,3 +6,4 @@ class CalculatorReader:
         """Parse the string, indentify the operations and create and operation dictionary with them"""
 
     def send_operations_dictionary(self):
+        """Send the operations dictionary to the calculator"""
