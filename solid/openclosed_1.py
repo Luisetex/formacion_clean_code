@@ -7,6 +7,7 @@ class UnknownEvent(Event):
 
 class LoginEvent(Event):
     """A event representing a user that has just entered the system."""
+
 class LogoutEvent(Event):
     """An event representing a user that has just left the system."""
 
