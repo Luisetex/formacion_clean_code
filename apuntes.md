@@ -38,7 +38,7 @@ En este punto hablaremos de los principios de diseño de software __SOLID__ y c�
 
 El principio de responsabilidad única dice que un componente de software (una clase) debe tener solo una responsabilidad. Es decir, solo se debe encargar de una cosa en concreto, por lo que tiene por lo tanto, una única razón para modificarse. Esto hace que no sea necesario modificar a una clase a menudo porque significa que la abstracción del problema ha sido correcta.
 
-* Ejemplo: mirar código srp_1.py
+* __Ejemplo: mirar código srp_1.py__
 
 En este caso, la clase tiene métodos que se corresponden a acciones ortogonales; es decir, totalmente independientes del resto.
 
@@ -48,39 +48,43 @@ Por ejemplo, si cambia la fuente de donde se lee el contenido de la operación (
 
 Un posible cambio sería el siguiente:
 
-* Ejemplo: mirar código srp_2.py
+* __Ejemplo: mirar código srp_2.py__
 
 Como solución, se han separado las clases en multiples con una única función independiente. De todos modos, esto no significa que cada clase tenga un solo método. Cualquiera de las clases puede tener métodos extra, siempre y cuando se correspondan a la misma lógica y tarea de la que se encarga.
 
-### 2.2 __Open/Closed principle___
+### 2.2 __Principio Open/Closed__
 
-Un módulo o elemento debe ser abierto a extensiones pero cerrado a modificaciones. En otras palabras, nuestro código debe ser extensible y que se pueda adaptar a cambios en el problema. Si cuando queramos añadir algo al código, tenemos que modificar elementos ya escritos, entonces la lógica está mal diseñada.
+Un módulo o elemento debe ser __abierto a extensiones__ pero __cerrado a modificaciones__. En otras palabras, nuestro código debe ser extensible y que se pueda adaptar a cambios en el problema. Si cuando queramos añadir algo al código, tenemos que modificar elementos ya escritos, entonces la lógica está mal diseñada.
 
-* Ejemplo: mirar código openclosed_1.py
+* __Ejemplo: mirar código openclosed_1.py__
 
 Como se puede observar, la lógica del programa es muy monolítica y no cumple el principio. Si queremos añadir algo nuevo, habría que modificar toda la lógica de detección de evento.
 
 Como solución:
 
-* Ejemplo: mirar código openclosed_2.py
+* __Ejemplo: mirar código openclosed_2.py__
 
 Aquí se puede ver que el código es perfectamente extensible. Para añadir una función nueva bastaría con añadir una nueva clase que herede de la genérica event e implemente una condición de identificación.
 
-El objetivo final del Open/Closed es la abstracción. A través de un contrato polimórfico (es decir, heredar de una clase genérica y hacer una nueva implementación de sus funciones) se puede hacer una extensión del modelo. De este modo la mantenibilidad del código está presente. Esto no es siempre posible, pero no es aplicable a todos los requerimientos posibles.
+El objetivo final del Open/Closed es la abstracción. A través de un contrato __polimórfico__ (es decir, heredar de una clase genérica y hacer una nueva implementación de sus funciones) se puede hacer una extensión del modelo. De este modo la mantenibilidad del código está presente. Esto no es siempre posible, pero no es aplicable a todos los requerimientos posibles.
 
 ### 2.3 __Principio de sustitución de Liskov__
 
-Las propiedades de un objeto deben preservarse en su diseño. En cualquier clase, se debería modificar sus subtipos de forma que el resto del programa no se rompa debido a ello. (Si S es un subtipo de T, los objetos de tipo T se pueden reemplazar por objetos de tipo S sin romperlos).
+> __Barbara Liskov__: una señora muy guay. [Ver más aquí](https://en.wikipedia.org/wiki/Barbara_Liskov).
 
-Esto se relaciona con el llamado diseño por contrato. Las funciones de un programa deben seguir unas reglas estrictas para impedir incompatibilidades entre tipos. En el caso de Python, podemos ver esto mediante extensiones que nos permitan usar un tipado estático.
+Las propiedades de un objeto deben preservarse en su diseño. En cualquier clase, se debería cambiar sus subtipos de forma que el resto del programa no se rompa debido a ello. 
 
-* Ejemplo, mirar liskov_1.py
+_Si S es un subtipo de T, los objetos de tipo T se pueden reemplazar por objetos de tipo S sin romperlos_.
+
+Esto se relaciona con el llamado __diseño por contrato__. Las funciones de un programa deben seguir unas reglas estrictas para impedir incompatibilidades entre tipos. En el caso de Python, podemos ver esto mediante extensiones que nos permitan usar un tipado estático.
+
+* __Ejemplo, mirar liskov_1.py__
 
 En este caso, Mypy nos informa de que meets_condition de LoginEvent es incompatible con el método del supertipo Event. Es decir, el objeto no cumple el mismo tipo que en la superclase. Quien llame a cualquier clase heredera de Event tiene que funcionar transparentemente igual que si se tratase de event. Lo mismo habría sucedido a la hora de devolver un objeto distinto.
 
 Otro fallo de Liskov sería si cambiase la propia signatura de una función:
 
-* Ejemplo, mirar liskov_2.py
+* __Ejemplo, mirar liskov_2.py__
 
 Aquí, vemos que el método de meets_condition de LogoutEvent tiene un parámetro extra que Event no tiene.
 
@@ -92,15 +96,15 @@ Este principio nos indica que las interfaces han de ser lo más pequeñas posibl
 
 Las interfaces en general son una serie de métodos que expone un objeto. Todos los mensajes que un objeto puede recibir forman su interfaz. Separan la definición del comportamiento expuesto de una clase de su implementación. En Python, las interfaces se definen implícitamente según sus métodos (_duck typing_). En Python 3, se introdujo el concepto de clase abstracta. Este tipo de clases definen el funcionamiento básico que debe ser implementado por sus clases derivadas.
 
-Se resume a que cuando definamos una interfaz, es mejor que la partamos en múltiples interfaces que contenga muy pocos métodos muy específicos. Al separar las interfaces tanto, las clases nuevas que quieran implementarlas serán cohesivas.
+Se resume a que cuando definamos una interfaz, es mejor que la partamos en múltiples interfaces que contenga muy pocos métodos muy específicos. Al separar las interfaces, las clases nuevas que quieran implementarlas serán cohesivas.
 
-* Ejemplo: mirar interfacesegregation_1.py
+* __Ejemplo: mirar interfacesegregation_1.py__
 
 Aquí vemos una interfaz que define dos métodos de forma abstracta. Las clases que hereden de ella deben implementar esos métodos para que pueda funcionar con los tipos de eventos que surjan. El problema es, ¿qué sucede si una clase que parsee otros tipos de evento no necesitan uno de los dos métodos ya que solo lo recibe en JSON? La clase abstracta no es lo suficientemente flexible para poder dar cualquier tipo de subclases.
 
-* Ejemplo: mirar interfacesegregation_2.py
+* __Ejemplo: mirar interfacesegregation_2.py__
 
-En este código observamos que al separar la interfaz en dos clases abstractas, se mantiene la ortogonalidad de las dos funciones independientes manteniendo la funcionalidad original. Aun así, esto no quiere decir que la interfaz solo tenga un método. En ocasiones, las interfaces van a requerir más de un método para funcionar correctamente, como por ejemplo las conexiones y desconexiones de un manager de bases de datos.
+En este código observamos que al separar la interfaz en dos clases abstractas, se mantiene la __ortogonalidad__ de las dos funciones independientes manteniendo la funcionalidad original. Aun así, esto no quiere decir que la interfaz solo tenga un método. En ocasiones, las interfaces van a requerir más de un método para funcionar correctamente, como por ejemplo las conexiones y desconexiones de un manager de bases de datos.
 
 ### 2.5 __Inversión de dependencias__
 
@@ -108,7 +112,7 @@ Imaginemos que dos objetos de nuestro sistema necesitan comunicarse. El objeto A
 
 ¿Cómo podemos realizar eso? Dando una interfaz y que sea B el obligado a cumplir e implementar dicha interfaz. Si B se va a someter a cambios continuamente, creando una interfaz con la que A se tenga que comunicar, por mucho que cambie B, el trabajo de comunicación desde el lado de A va a ser el mismo, puesto que B tiene que mantener su implementación cumpliendo el contrato que instaura la interfaz.
 
-* Ejemplo:
+* __Ejemplo__:
 
 Tenemos una clase llamada EventStreamer que va a monitorizar evento que se enviarán a una base que recoge los datos para ser analizados. Podemos hacerlo con una clase EventStreamer que interactúe con un destino, SysLog.
 
@@ -116,10 +120,10 @@ Si la clase de alto nivel, EventStreamer depende de SysLog, que implementa numer
 
 ¿Cuál puede ser una solución? Hacer que EventStreamer interactúe con una interfaz. Así, las clases que quieran conectarse con EventStreamer necesitarán implementar exactamente los métodos requeridos por la clase abstracta.
 
-* Ejemplo:
+* __Ejemplo__:
 
 Hacer que la clase SysLog implemente los métodos de una clase genérica DataTargetClient. Así EventStreamer solo se tiene que preocupar de que sus métodos funcionen bien con la interfaz, puesto que el resto de subclases tendrán sus mismos métodos.
 
 ### Conclusión
 
-En definitiva, los principios de SOLID nos dan una serie de guías útiles, que, aunque no son obligatorias y menos en el caso de Python por su tipado dinámico, nos ayudan a crear un código que, aunque pueda funcionar exactamente igual, nos va a dar una serie de garantías muy útiles a la hora de mantener nuestros proyectos por otros compañeros y sin duda por nosotros mismos.
+En definitiva, los principios de SOLID nos dan una serie de guías útiles, que, aunque no son obligatorias y menos en el caso de Python por su tipado dinámico, nos ayudan a crear un código que, aunque pueda funcionar exactamente igual, nos va a dar una serie de __garantías__ muy útiles a la hora de mantener nuestros proyectos por otros compañeros y sin duda por nosotros mismos.
